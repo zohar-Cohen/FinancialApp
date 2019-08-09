@@ -1,0 +1,52 @@
+{"properties": [
+  {
+    "name": "corp.actions.remotefolder",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.remotefolder'"
+  },
+  {
+    "name": "corp.actions.password",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.password'"
+  },
+  {
+    "name": "corp.actions.username",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.username'"
+  },
+  {
+    "name": "corp.actions.port",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.port'"
+  },
+  {
+    "name": "corp.actions.host",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.host'"
+  },
+  {
+    "name": "corp.actions.regx",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.regx'"
+  },
+  {
+    "name": "corp.actions.enableintegration",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.enableintegration'"
+  },
+  {
+    "name": "corp.actions.filter",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.filter'"
+  },
+  {
+    "name": "corp.actions.host",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.host'"
+  },
+  {
+    "name": "corp.actions.localdir",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.localdir'"
+  }
+]}

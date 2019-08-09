@@ -32,3 +32,9 @@ build/
 
 
 application.properties
+.mvn
+HELP.md
+mvnw
+mvnw.cmd
+
+

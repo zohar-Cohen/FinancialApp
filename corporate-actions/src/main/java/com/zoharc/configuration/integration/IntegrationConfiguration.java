@@ -10,6 +10,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.integration.launch.JobLaunchingGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.dsl.IntegrationFlow;
@@ -29,6 +30,7 @@ import org.springframework.integration.handler.LoggingHandler;
  *
  */
 @Configuration
+@ConditionalOnProperty(prefix = "corp.actions", name = "enableintegration", matchIfMissing = false)
 public class IntegrationConfiguration {
 
 

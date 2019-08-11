@@ -48,5 +48,10 @@
     "name": "corp.actions.localdir",
     "type": "java.lang.String",
     "description": "A description for 'corp.actions.localdir'"
+  },
+  {
+    "name": "corp.actions.enable.bean.logging",
+    "type": "java.lang.String",
+    "description": "A description for 'corp.actions.enable.bean.logging'"
   }
 ]}

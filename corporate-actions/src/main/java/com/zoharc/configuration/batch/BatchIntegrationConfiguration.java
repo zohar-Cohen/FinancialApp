@@ -10,14 +10,14 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.PassThroughLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 
 @Configuration
+@ConditionalOnProperty(prefix = "corp.actions", name = "enableintegration", matchIfMissing = false)
 public class BatchIntegrationConfiguration {
-
-	//private final static int LinesToSkip = 2;
 
 	@Autowired
 	private JobBuilderFactory jobBuilderFactory;
@@ -25,51 +25,6 @@ public class BatchIntegrationConfiguration {
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
 
-	/*
-	@Bean
-	public FlatFileItemReader<CorporateActions> itemReader(){
-
-		FlatFileItemReader<CorporateActions> itemReader = new FlatFileItemReader<>();
-		itemReader.setLinesToSkip(LinesToSkip);
-		itemReader.setComments(new String[] {"EDI_ENDOFFILE"});
-		itemReader.setResource(new ClassPathResource("/data/20190503_690.txt"));
-
-		DefaultLineMapper<CorporateActions> corporateActionsLineMapper = new DefaultLineMapper<>();
-
-		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
-		tokenizer.setDelimiter(DelimitedLineTokenizer.DELIMITER_TAB);
-		tokenizer.setNames(CorporateActions.getFileHeader());
-
-		corporateActionsLineMapper.setLineTokenizer(tokenizer);
-		corporateActionsLineMapper.setFieldSetMapper(new CorporateActionsLineMapper());
-		corporateActionsLineMapper.afterPropertiesSet();
-
-		itemReader.setLineMapper(corporateActionsLineMapper);
-		return itemReader;
-
-	}
-
-
-	@Bean
-	public ValidatingItemProcessor<CorporateActions> itemValidator(){
-
-		ValidatingItemProcessor<CorporateActions> corporateActionValidator = new ValidatingItemProcessor<>(new CorporateActionValidator(supportedEvents));
-		corporateActionValidator.setFilter(true);
-		return corporateActionValidator;
-	}
-
-	@Bean
-	public CorporateActionProcessor itemProcessor() {return new CorporateActionProcessor();}
-
-	@Bean
-	public ItemWriter<CorporateActions> ItemWriter() {
-		return items -> {
-			for (CorporateActions item : items) {
-				System.out.println(item.toString());
-			}
-		};
-	}
-	 */
 
 	@Bean
 	@StepScope

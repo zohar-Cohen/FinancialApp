@@ -2,56 +2,51 @@
   {
     "name": "corp.actions.remotefolder",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.remotefolder'"
+    "description": "remote server remote folder"
   },
   {
     "name": "corp.actions.password",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.password'"
+    "description": "remote server password"
   },
   {
     "name": "corp.actions.username",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.username'"
+    "description": "FTP server user name"
   },
   {
     "name": "corp.actions.port",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.port'"
+    "description": "remote server port, deaful 21 -FTP"
   },
   {
     "name": "corp.actions.host",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.host'"
+    "description": "remote server host"
   },
   {
     "name": "corp.actions.regx",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.regx'"
+    "description": "The regula expresstion pattern for the file in the remote server"
   },
   {
     "name": "corp.actions.enableintegration",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.enableintegration'"
+    "description": "Property that enable/disable spring integration to integrate with remote FTP server"
   },
   {
     "name": "corp.actions.filter",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.filter'"
-  },
-  {
-    "name": "corp.actions.host",
-    "type": "java.lang.String",
-    "description": "A description for 'corp.actions.host'"
+    "description": "remote server file filter - regula expresstion pattern for the file in the remote server "
   },
   {
     "name": "corp.actions.localdir",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.localdir'"
+    "description": "Local/Archive directory where the file from the spring integration inbound channel will be stored"
   },
   {
     "name": "corp.actions.enable.bean.logging",
     "type": "java.lang.String",
-    "description": "A description for 'corp.actions.enable.bean.logging'"
+    "description": "A falg to enable/disable logging of the container's beans'"
   }
 ]}

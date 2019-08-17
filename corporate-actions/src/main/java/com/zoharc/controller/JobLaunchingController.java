@@ -18,19 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@RequestMapping("/lunch")
 public class JobLaunchingController {
 
-	//private static final Logger logger = LoggerFactory.getLogger(JobLaunchingController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(JobLaunchingController.class);
 
 	@Autowired
 	private JobOperator jobOperator;
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/byFile", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public void launch(@RequestParam("name") String name) throws Exception {
-		this.jobOperator.start("job", String.format("name=%s", name));
-	}
+	public void launch(@RequestParam("pathToFile") String filePath) throws Exception {
 
+		LOG.info("Rest Controller, recived a call for a manual request to process the follwing file: {}", filePath);
+		this.jobOperator.start("byFileJob", String.format("pathToFile=%s", filePath));
+	}
 }
 
 

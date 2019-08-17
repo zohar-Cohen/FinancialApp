@@ -78,6 +78,9 @@ public class SecurityTbl {
 	@ManyToOne
 	@JoinColumn(name = "industry_code", insertable = false, updatable = false )
 	private IndustryTbl industry;
+	
+	@Column(name = "primary_exchange")
+	private String primaryExchange;
 
 
 	public void setStocks(StockTbl ... stocks) {

@@ -14,14 +14,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Zohar Cohen Date: 14-Aug-2019
  *
  */
-@Data @Builder
+@Data @NoArgsConstructor 
 @Entity @Table(name = "industry")
 @EntityListeners(AuditingEntityListener.class)
 
@@ -39,7 +39,7 @@ public class IndustryTbl {
 
 	@Id
 	@Column(name = "industry_code")
-	private String industryCode;
+	private Long industryCode;
 
 	@Column(name = "industry_desc")
 	private String industryDesc;

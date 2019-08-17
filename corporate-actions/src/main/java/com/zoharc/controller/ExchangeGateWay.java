@@ -53,7 +53,7 @@ public class ExchangeGateWay {
 	}
 
 
-	@GetMapping(path = "/getExchangeByID/{exchangeCode}")
+	@GetMapping(path = "/getExchangeByID/{exchangeCode}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> getExhangeDetailsByExcode(@PathVariable("exchangeCode") String exchangeCode){
 
 		LOGGER.info("getExhangeDetailsByExcode(): Going to provide details for {} exchange code", exchangeCode);
@@ -67,6 +67,7 @@ public class ExchangeGateWay {
 
 
 	}
+	
 	@GetMapping(path = "/getExchangeLikeName/{exchangeName}")
 	public ResponseEntity<Object> getExchangeDetailsByName(@PathVariable("exchangeName") String exchangeName){
 

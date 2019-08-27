@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zoharc.persistence.ExchangeTbl;
+import com.zoharc.persistence.Exchange;
 import com.zoharc.repository.ExchangeRepository;
 
 /**
@@ -41,7 +41,7 @@ public class ExchangeGateWay {
 	public ResponseEntity<Object> getAllExchanges(){
 
 		LOGGER.info("getAllExchanges(): Going to provide the avilable exchanges...");
-		List<ExchangeTbl>  entities = new ArrayList<>();
+		List<Exchange>  entities = new ArrayList<>();
 		exchangeRepository.findAll().forEach(entities::add);
 		if(entities.size() == 0) {
 
@@ -57,7 +57,7 @@ public class ExchangeGateWay {
 	public ResponseEntity<Object> getExhangeDetailsByExcode(@PathVariable("exchangeCode") String exchangeCode){
 
 		LOGGER.info("getExhangeDetailsByExcode(): Going to provide details for {} exchange code", exchangeCode);
-		Optional<ExchangeTbl> exchangeDetails = exchangeRepository.findById(exchangeCode);
+		Optional<Exchange> exchangeDetails = exchangeRepository.findById(exchangeCode);
 		if(!exchangeDetails.isPresent()) {
 			LOGGER.info("getExhangeDetailsByExcode(): The exchange {} doesn't exsist in the system", exchangeCode);
 			return new ResponseEntity<Object>("There is no data in the system for the given excode", HttpStatus.EXPECTATION_FAILED);
@@ -72,7 +72,7 @@ public class ExchangeGateWay {
 	public ResponseEntity<Object> getExchangeDetailsByName(@PathVariable("exchangeName") String exchangeName){
 
 		LOGGER.info("getExchangeDetailsByName(): Going to provide details for {} exchange name", exchangeName);
-		Optional<List<ExchangeTbl>> exchangeEntities = exchangeRepository.findExchangeContainsName(exchangeName);
+		Optional<List<Exchange>> exchangeEntities = exchangeRepository.findExchangeContainsName(exchangeName);
 
 		if(!exchangeEntities.isPresent()) {
 			LOGGER.info("getExchangeDetailsByName(): There is no exchange that contains the given exchange name: {}",exchangeName);
@@ -85,7 +85,7 @@ public class ExchangeGateWay {
 	public ResponseEntity<Object> getExchangeDetailsByExactName(@PathVariable("exchangeName") String exchangeName){
 
 		LOGGER.info("getExchangeDetailsByExactName(): Going to provide details for {} exchange name", exchangeName);
-		Optional<ExchangeTbl> exchangeEntity = exchangeRepository.findExchangeByName(exchangeName);
+		Optional<Exchange> exchangeEntity = exchangeRepository.findExchangeByName(exchangeName);
 		if(!exchangeEntity.isPresent()) {
 			LOGGER.info("getExchangeDetailsByExactName(): There is no exchange with given exchange name: {}",exchangeName);
 			return new ResponseEntity<Object>("There is no data in the system that contains the given exchange name", HttpStatus.EXPECTATION_FAILED);   
@@ -122,9 +122,9 @@ public class ExchangeGateWay {
 	 * @return HTTP status
 	 */
 	@PutMapping("/updateExchangeDetails/{exchangeCode}")
-	public ResponseEntity<Object> updateExchangeDetails(@RequestBody ExchangeTbl exchange, @PathVariable("exchangeCode") String exchangeCode){
+	public ResponseEntity<Object> updateExchangeDetails(@RequestBody Exchange exchange, @PathVariable("exchangeCode") String exchangeCode){
 		LOGGER.info("updateExchangeDetails(): Going to update exchange code: {}, with the follwing info: {}",exchangeCode, exchange);
-		Optional<ExchangeTbl> exchangeDetails = exchangeRepository.findById(exchangeCode);
+		Optional<Exchange> exchangeDetails = exchangeRepository.findById(exchangeCode);
 		if(!exchangeDetails.isPresent()) {
 			LOGGER.info("updateExchangeDetails(): The exchange doesn't exsit in the system, ignoring...");
 			return ResponseEntity.notFound().build();
@@ -136,7 +136,7 @@ public class ExchangeGateWay {
 
 	/*--------------------------------------------------------INSERT NEW EXCHANGE --------------------------------------------------------------------*/
 	@PostMapping("/newExchange")
-	public ResponseEntity<Object> insertNewExchange(@RequestBody ExchangeTbl exchange){
+	public ResponseEntity<Object> insertNewExchange(@RequestBody Exchange exchange){
 		LOGGER.info("insertNewExchange(): Going to insert new exchange exchange: {}", exchange);
         if(exchange == null) {
     		LOGGER.warn("insertNewExchange(): There is no data in the request body, ignore...");

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zoharc.persistence.IndustryTbl;
+import com.zoharc.persistence.Industry;
 import com.zoharc.repository.IndustryRepository;
 
 
@@ -43,7 +43,7 @@ public class IndustryGateWay {
 	public ResponseEntity<Object> getAllIndustries(){
 
 		LOGGER.info("getAllIndustries(): Going to provide the avilable industries...");
-		List<IndustryTbl>  entities = new ArrayList<>();
+		List<Industry>  entities = new ArrayList<>();
 		industryRepository.findAll().forEach(entities::add);
 		if(entities.size() == 0) {
 
@@ -56,10 +56,10 @@ public class IndustryGateWay {
 
 
 	@GetMapping(path = "/getIndustryByID/{industryCode}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> getIndustryDetailsByExcode(@PathVariable("industryCode") long industryCode){
+	public ResponseEntity<Object> getIndustryDetailsByExcode(@PathVariable("industryCode") Integer industryCode){
 
 		LOGGER.info("getIndustryDetailsByExcode(): Going to provide details for {} industry code", industryCode);
-		Optional<IndustryTbl> industryDetails = industryRepository.findById(industryCode);
+		Optional<Industry> industryDetails = industryRepository.findById(industryCode);
 		if(!industryDetails.isPresent()) {
 			LOGGER.info("getIndustryDetailsByExcode(): The industry {} doesn't exsist in the system", industryCode);
 			return new ResponseEntity<Object>("There is no data in the system for the given excode", HttpStatus.EXPECTATION_FAILED);
@@ -73,7 +73,7 @@ public class IndustryGateWay {
 
 
 	@DeleteMapping(path = "/deleteIndustryByPK/{industryCode}")
-	public void deleteIndustryByExchangeCode(@PathVariable("industryCode") long industryCode) {
+	public void deleteIndustryByExchangeCode(@PathVariable("industryCode") Integer industryCode) {
 		LOGGER.info("updateIndustryDetails(): Going to delete record of {} industry code", industryCode);
 		industryRepository.deleteById(industryCode);
 	}	
@@ -83,9 +83,9 @@ public class IndustryGateWay {
 
 
 	@PutMapping("/updateIndustryDetails/{industryCode}")
-	public ResponseEntity<Object> updateIndustryDetails(@RequestBody IndustryTbl industry, @PathVariable("industryCode") long industryCode){
+	public ResponseEntity<Object> updateIndustryDetails(@RequestBody Industry industry, @PathVariable("industryCode") Integer industryCode){
 		LOGGER.info("updateIndustryDetails(): Going to update industry code: {}, with the follwing info: {}",industryCode, industry);
-		Optional<IndustryTbl> industryDetails = industryRepository.findById(industryCode);
+		Optional<Industry> industryDetails = industryRepository.findById(industryCode);
 		if(!industryDetails.isPresent()) {
 			LOGGER.info("updateIndustryDetails(): The exchange doesn't exsit in the system, ignoring...");
 			return ResponseEntity.notFound().build();
@@ -96,7 +96,7 @@ public class IndustryGateWay {
 
 	/*--------------------------------------------------------INSERT NEW INDUSTRY --------------------------------------------------------------------*/
 	@PostMapping("/newIndustry")
-	public ResponseEntity<Object> insertNewIndustry(@RequestBody IndustryTbl industry){
+	public ResponseEntity<Object> insertNewIndustry(@RequestBody Industry industry){
 		LOGGER.info("insertNewExchange(): Going to insert new industry record: {}", industry);
 		if(industry == null) {
 			LOGGER.warn("insertNewExchange(): There is no data in the request body, ignore...");

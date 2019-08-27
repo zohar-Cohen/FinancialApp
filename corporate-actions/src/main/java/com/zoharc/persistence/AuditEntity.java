@@ -1,12 +1,11 @@
 package com.zoharc.persistence;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -14,35 +13,33 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * @author Zohar Cohen Date: 14-Aug-2019
+ *  The class contains common auditing related fields 
+ *  @author Zohar Cohen Date: 27-Aug-2019
  *
  */
-@Data @NoArgsConstructor 
-@Entity @Table(name = "industry")
+@Getter @Setter
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
+public abstract class AuditEntity implements Serializable {
 
-public class IndustryTbl {
+	private static final long serialVersionUID = 1L;
 
-	@Column(name = "sys_creation_date", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="SYS_CREATION_DATE")
 	@CreatedDate
 	private Date sysCreationDate;
 
-	@Column(name = "sys_update_date", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="SYS_UPDATE_DATE")
 	@LastModifiedDate
 	private Date sysUpdateDate;
 
-	@Id
-	@Column(name = "industry_code")
-	private Long industryCode;
 
-	@Column(name = "industry_desc")
-	private String industryDesc;
 }
-
-

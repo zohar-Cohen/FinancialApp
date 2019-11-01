@@ -1,4 +1,4 @@
-package com.zoharc.configuration.batch;
+package com.zoharc.batch.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +31,10 @@ public class BatchIntegrationConfiguration {
 	@Bean
 	@StepScope
 	FlatFileItemReader<String> itemReader(@Value("#{jobParameters[file_path]}") String filePath) {
-		System.out.println("Item Reader: "+filePath);
-		FlatFileItemReader<String> reader = new FlatFileItemReader<>();
+		
+		LOGGER.info("Recived a message from Job Luncher, will process the file on {} location", filePath);
+				FlatFileItemReader<String> reader = new FlatFileItemReader<>();
 		FileSystemResource fileResource = new FileSystemResource(filePath);
-
-
 		reader.setResource(fileResource);
 		reader.setLineMapper(new PassThroughLineMapper());
 		try {

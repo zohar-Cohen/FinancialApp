@@ -1,4 +1,4 @@
-package com.zoharc.reader;
+package com.zoharc.batch.reader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ public class SecurityMasterLineMapper implements FieldSetMapper<SecurityMasterDT
 
 	protected final static String dateFormat = "yyyy/MM/dd";
 	protected final static String dateTimeFormat = "yyyy/MM/dd HH:mm:ss";
-
+	private final static int DEFAULT_INTEGER = 1234;
 
 	@Override
 	public SecurityMasterDTO mapFieldSet(FieldSet fieldSet) throws BindException {
@@ -69,7 +69,7 @@ public class SecurityMasterLineMapper implements FieldSetMapper<SecurityMasterDT
 			return fs.readInt(key);
 			
 		}catch(NumberFormatException e) {
-			return 123456;
+			return DEFAULT_INTEGER;
 		}
 	}
 	

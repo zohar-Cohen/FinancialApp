@@ -36,6 +36,20 @@ public class ExchangeGateWay {
 	private ExchangeRepository exchangeRepository;
 
 	/*--------------------------------------------------------GET EXCHANGE DETAILS----------------------------------------------------------------*/
+	@GetMapping(path = "/allMarketCodes", produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> getAllExchangesWithMarketCode(){
+		LOGGER.info("getAllExchangesWithMarketCode(): Going to provide the avilable market codes...");
+		Optional<List<String[]>> marketCodes = exchangeRepository.findAllMarketCodes();
+		if(!marketCodes.isPresent()) {
+			String msg = "There is no exchanges with market code, please check the referance data implementation.";
+			LOGGER.warn(msg);
+			return new ResponseEntity<>(msg,HttpStatus.EXPECTATION_FAILED);
+			
+		}
+		LOGGER.info("getAllExchangesWithMarketCode(): return {} exchanges details", marketCodes.get().size());
+		return new ResponseEntity<Object>(marketCodes.get(), HttpStatus.OK);
+		
+	}
 
 	@GetMapping(path = "/allexchanges", produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> getAllExchanges(){

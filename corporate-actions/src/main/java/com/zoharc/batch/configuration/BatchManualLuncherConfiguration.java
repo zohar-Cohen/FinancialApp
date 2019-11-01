@@ -1,4 +1,8 @@
-package com.zoharc.configuration.batch;
+package com.zoharc.batch.configuration;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+
+import javax.persistence.EntityManagerFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +18,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.support.SimpleJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
@@ -25,9 +30,14 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.zoharc.reader.SecurityMasterDTO;
-import com.zoharc.reader.SecurityMasterLineMapper;
+import com.zoharc.batch.processor.SecurityMasterJDBCProcessor;
+import com.zoharc.batch.processor.SecurityMasterProcessor;
+import com.zoharc.batch.reader.SecurityMasterDTO;
+import com.zoharc.batch.reader.SecurityMasterLineMapper;
+import com.zoharc.batch.writer.SecurityMasterJDBCWriter;
+import com.zoharc.persistence.Security;
 
 /**
  * @author Zohar Cohen
@@ -36,6 +46,8 @@ import com.zoharc.reader.SecurityMasterLineMapper;
 public class BatchManualLuncherConfiguration implements ApplicationContextAware {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(BatchManualLuncherConfiguration.class);
+	
+	private boolean multiThreadStep = false;
 
 	@Autowired
 	public JobBuilderFactory jobBuilderFactory;
@@ -54,6 +66,9 @@ public class BatchManualLuncherConfiguration implements ApplicationContextAware 
 
 	@Autowired
 	public JobLauncher jobLauncher;
+	
+	@Autowired
+	private EntityManagerFactory emf;
 
 	private ApplicationContext applicationContext;
 
@@ -66,6 +81,16 @@ public class BatchManualLuncherConfiguration implements ApplicationContextAware 
 		registrar.afterPropertiesSet();
 
 		return registrar;
+	}
+	
+	@Bean
+	public ThreadPoolTaskExecutor taskExecutor() {
+		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setMaxPoolSize(10);
+		taskExecutor.setCorePoolSize(10);
+		taskExecutor.setQueueCapacity(10);
+		taskExecutor.afterPropertiesSet();
+		return taskExecutor;
 	}
 
 	@Bean
@@ -86,7 +111,7 @@ public class BatchManualLuncherConfiguration implements ApplicationContextAware 
 
 	@Bean
 	@StepScope
-	FlatFileItemReader<SecurityMasterDTO> itemReader(@Value("#{jobParameters[pathToFile]}") String filePath) {
+	FlatFileItemReader<SecurityMasterDTO> manualItemReader(@Value("#{jobParameters[pathToFile]}") String filePath) {
 
 		LOG.info("ItemReader:: Going to process the follwing file: "+filePath);
 
@@ -106,23 +131,70 @@ public class BatchManualLuncherConfiguration implements ApplicationContextAware 
 		lineMapper.afterPropertiesSet();
 
 		itemReader.setLineMapper(lineMapper);
-
+		if(multiThreadStep) {
+			itemReader.setSaveState(false);
+		}
 		return itemReader;
 	}
-
+	
+	@Bean
+	public SecurityMasterProcessor manualItemProcessor() {return new SecurityMasterProcessor();}
+	
+	@Bean
+	public SecurityMasterJDBCProcessor jdbcItemProcessor() {return new SecurityMasterJDBCProcessor();}
+	
+    @Bean
+    public SecurityMasterJDBCWriter jdbcItemWriter() {return new SecurityMasterJDBCWriter();}
+	
+	
+	@Bean
+	public JpaItemWriter<Security> manualItemWriter(){
+		
+		JpaItemWriter<Security> itemWriter = new JpaItemWriter<>();
+		itemWriter.setEntityManagerFactory(emf);
+		
+		return itemWriter;
+		
+	}
+	
 	@Bean
 	public Job job() {
 		return jobBuilderFactory.get("byFileJob")
-				.start(stepBuilderFactory.get("step1")
-						.<SecurityMasterDTO, SecurityMasterDTO>chunk(10)
-						.reader(itemReader(null))
-						.writer(i -> i.stream().forEach(j -> System.out.println(j)))
+				.start(stepBuilderFactory.get("LOAD-SECURITY-MASTER")
+						.<SecurityMasterDTO, Security>chunk(1000)
+						.reader(manualItemReader(null))
+						.processor(manualItemProcessor())
+						.writer(manualItemWriter())
+						.faultTolerant().skip(SQLIntegrityConstraintViolationException.class).skipLimit(10)
+						//.writer(i -> i.stream().forEach(j -> System.out.println(j)))
 						.build())
 				.build();
 	}
+	
+	
+	@Bean
+	public Job jdbcSecurityMasterJob() {
+		this.multiThreadStep = true;
+		return jobBuilderFactory.get("byFileJdbcJob")
+				.start(stepBuilderFactory.get("LOAD-SECURITY-MASTER")
+						.<SecurityMasterDTO, Security>chunk(1000)
+						.reader(manualItemReader(null))
+						.processor(jdbcItemProcessor())
+						.writer(jdbcItemWriter())
+						.taskExecutor(taskExecutor())
+						.build())
+				
+				.build();
+	}
+	
+	
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
+	
+	
+	
+	
 }

@@ -1,13 +1,22 @@
 package com.zoharc.persistence;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 /**
@@ -15,18 +24,23 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="exchange")
+@Builder @AllArgsConstructor @Getter @Setter @NoArgsConstructor 
 public class Exchange implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="EXCHANGE_CODE")
+	@Column(name="EXCHANGE_CODE", unique=true, nullable=false, length=32)
 	private String exchangeCode;
 
-	@Column(name="EXCHANGE_COUNTRY")
+	@Column(name="EXCHANGE_COUNTRY", length=100)
 	private String exchangeCountry;
 
-	@Column(name="EXCHANGE_NAME")
+	@Column(name="EXCHANGE_NAME", nullable=false, length=400)
 	private String exchangeName;
+
+	@Column(name="MARKET_CODE", length=15)
+	private String marketCode;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="SYS_CREATION_DATE")
@@ -36,61 +50,11 @@ public class Exchange implements Serializable {
 	@Column(name="SYS_UPDATE_DATE")
 	private Date sysUpdateDate;
 
-	//bi-directional many-to-one association to Stock
 	@OneToMany(mappedBy="exchange")
-	//@JsonBackReference
-	//@JsonManagedReference
-	private List<Stock> stocks;
+	private Set<Stock> stocks;
 
-	public Exchange() {
-	}
-
-	public String getExchangeCode() {
-		return this.exchangeCode;
-	}
-
-	public void setExchangeCode(String exchangeCode) {
-		this.exchangeCode = exchangeCode;
-	}
-
-	public String getExchangeCountry() {
-		return this.exchangeCountry;
-	}
-
-	public void setExchangeCountry(String exchangeCountry) {
-		this.exchangeCountry = exchangeCountry;
-	}
-
-	public String getExchangeName() {
-		return this.exchangeName;
-	}
-
-	public void setExchangeName(String exchangeName) {
-		this.exchangeName = exchangeName;
-	}
-
-	public Date getSysCreationDate() {
-		return this.sysCreationDate;
-	}
-
-	public void setSysCreationDate(Date sysCreationDate) {
-		this.sysCreationDate = sysCreationDate;
-	}
-
-	public Date getSysUpdateDate() {
-		return this.sysUpdateDate;
-	}
-
-	public void setSysUpdateDate(Date sysUpdateDate) {
-		this.sysUpdateDate = sysUpdateDate;
-	}
-
-	public List<Stock> getStocks() {
+	public Set<Stock> getStocks() {
 		return this.stocks;
-	}
-
-	public void setStocks(List<Stock> stocks) {
-		this.stocks = stocks;
 	}
 
 	public Stock addStock(Stock stock) {

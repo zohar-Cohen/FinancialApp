@@ -1,4 +1,4 @@
-package com.zoharc.reader;
+package com.zoharc.batch.reader;
 
 import java.util.StringJoiner;
 

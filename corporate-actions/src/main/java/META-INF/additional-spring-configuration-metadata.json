@@ -48,5 +48,10 @@
     "name": "corp.actions.enable.bean.logging",
     "type": "java.lang.String",
     "description": "A falg to enable/disable logging of the container's beans'"
+  },
+  {
+    "name": "corp.actions.step.threads",
+    "type": "java.lang.String",
+    "description": "The number of threads in the executor thread pool, used to multi-thread the batch steps'"
   }
 ]}

@@ -33,7 +33,21 @@ public class JobLaunchingController {
 		LOG.info("Rest Controller, recived a call for a manual request to process the follwing file: {}", filePath);
 		this.jobOperator.start("byFileJob", String.format("pathToFile=%s", filePath));
 	}
+
+
+	@RequestMapping(value = "/byFileJdbc", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public void lunchJdbcJob(@RequestParam("pathToFile") String filePath) throws Exception{
+
+		LOG.info("Rest Controller, recived a call for a manual request to process the follwing file: {}", filePath);
+		this.jobOperator.start("byFileJdbcJob", String.format("pathToFile=%s", filePath));
+	}
+
 }
+
+
+
+
 
 
 
